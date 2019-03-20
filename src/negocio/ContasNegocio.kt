@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
 import io.ktor.auth.principal
 import io.ktor.features.BadRequestException
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -26,9 +27,10 @@ import org.slf4j.Logger
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Route.routeContas(dao: DAOFacade, log: Logger) { // TODO acrescentar autenticacao
-//    authenticate {
+fun Route.routeContas(dao: DAOFacade, log: Logger) {
+    authenticate {
         get<RouteContas_contaText> {
+            log.trace("a" + it.contaText + "a")
             val conta = dao.contaByText(it.contaText)
 
             if (conta == null) {
@@ -59,12 +61,12 @@ fun Route.routeContas(dao: DAOFacade, log: Logger) { // TODO acrescentar autenti
             val contasResponse = mutableListOf<Conta>()
 
             post.contasDoPost.forEach {
-                val idContaLocal = dao.createConta(it.text, it.isDefaut)
-                contasResponse.add( Conta(idContaLocal, it.text, it.isDefaut) )// userIdPrincipal.name
+                val idContaLocal = dao.createConta(it.text, it.isDefaut, userIdPrincipal.name)
+                contasResponse.add( Conta(idContaLocal, it.text, it.isDefaut, userIdPrincipal.name) )
             }
 
             call.respond( mapOf("OK" to true, "contas" to contasResponse) )
         }
-//    }
+    }
 }
 

@@ -4,7 +4,7 @@ import io.ktor.features.BadRequestException
 import java.io.Serializable
 
 
-data class Conta(val contaId: Int, val text: String, val isDefaut: Boolean) : Serializable
+data class Conta(val contaId: Int, val text: String, val isDefaut: Boolean, val usuario: String) : Serializable
 
 data class PostConta( val contasDoPost: List<ContaDoPost>) {
     data class ContaDoPost(val text: String, val isDefaut: Boolean) {

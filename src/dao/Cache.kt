@@ -54,9 +54,9 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
         return conta
     }
 
-    override fun createConta(text: String, isDefault: Boolean): Int {
-        val id = delegate.createConta(text, isDefault)
-        val contaLocal = Conta(id, text, isDefault)
+    override fun createConta(text: String, isDefault: Boolean, usuario: String): Int {
+        val id = delegate.createConta(text, isDefault, usuario)
+        val contaLocal = Conta(id, text, isDefault, usuario)
         contaCache.put(text, contaLocal)
 
         return id

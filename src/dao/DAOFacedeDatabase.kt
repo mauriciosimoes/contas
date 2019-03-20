@@ -22,8 +22,7 @@ interface DAOFacade : Closeable {
 
     fun contaByText(text: String): Conta?
 
-//    fun createConta(text: String, isDefault: Boolean, usuario: String): Int
-    fun createConta(text: String, isDefault: Boolean): Int
+    fun createConta(text: String, isDefault: Boolean, usuario: String): Int
 
 //    fun conta(contaId: Int): Conta?
 //
@@ -55,15 +54,16 @@ class DAOFacadeDatabase(val db: Database = Database.connect("jdbc:h2:mem:test", 
 
     override fun contaByText(text: String) = db.transaction {
         Contas.select { Contas.text.eq(text) }
-            .map { Conta(it[Contas.id], text, it[Contas.isDefault]) }
+            .map { Conta(it[Contas.id], text, it[Contas.isDefault], it[Contas.usuario]) }
             .singleOrNull()
     }
 
-    override fun createConta(text: String, isDefault: Boolean): Int = db.transaction {
+    override fun createConta(text: String, isDefault: Boolean, usuario: String): Int = db.transaction {
         Contas.insert {
                 it[Contas.text] = text
-                it[Contas.isDefault] = isDefault}
-            .generatedKey ?: throw IllegalStateException("Erro na geração da chave de 'Contas'.")
+                it[Contas.isDefault] = isDefault
+                it[Contas.usuario] = usuario}
+            .generatedKey ?: error("Erro na geração da chave de 'Contas'.")
     }
 //
     override fun close() {

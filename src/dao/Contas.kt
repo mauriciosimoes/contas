@@ -9,5 +9,5 @@ object Contas : Table() {
     val id = integer("id").primaryKey().autoIncrement()
     val text = varchar("text", 20).uniqueIndex()
     val isDefault = bool("isDefault")
-    //val usuario = varchar("usuario", 254)
+    val usuario = varchar("usuario", 254)
 }
