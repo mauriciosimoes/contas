@@ -43,11 +43,11 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
         delegate.init()
     }
 
-    override fun contaByText(text: String): Conta? {
+    override fun contaByText(text: String, usuario: String): Conta? {
         val contaCached = contaCache.get(text)
         if (contaCached != null) return contaCached
 
-        val conta = delegate.contaByText(text)
+        val conta = delegate.contaByText(text, usuario)
 
         if ( conta != null) contaCache.put(text, conta)
 

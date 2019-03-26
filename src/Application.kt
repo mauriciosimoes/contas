@@ -128,6 +128,9 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
             dateFormat = DateFormat.getDateInstance()
+            disableDefaultTyping()
+            disableDefaultTyping()
+
         }
     }
 
@@ -148,15 +151,12 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
 //            call.respond(HttpStatusCode.Unauthorized, mapOf("OK" to false, "error" to (exception.message ?: "")))
 //        }
         exception<NotFoundException> { exception ->
-            log.trace("passei NotFoundException")
             call.respond(HttpStatusCode.NotFound, mapOf("OK" to false, "error" to (exception.message ?: "")))
         }
         exception<BadRequestException> { exception ->
-            log.trace("passei BadRequestException")
             call.respond(HttpStatusCode.BadRequest, mapOf("OK" to false, "error" to (exception.message ?: "")))
         }
         exception<IllegalStateException> { exception ->
-            log.trace("passei IllegalStateException")
             call.respond(HttpStatusCode.InternalServerError, mapOf("OK" to false, "error" to (exception.message ?: "")))
         }
     }

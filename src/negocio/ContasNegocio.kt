@@ -30,14 +30,14 @@ import org.slf4j.Logger
 fun Route.routeContas(dao: DAOFacade, log: Logger) {
     authenticate {
         get<RouteContas_contaText> {
-            log.trace("a" + it.contaText + "a")
-            val conta = dao.contaByText(it.contaText)
+            val userIdPrincipal =
+                call.principal<UserIdPrincipal>() ?: error("Informação de autenticação não encontrada no GET.")
 
-            if (conta == null) {
-                throw NotFoundException( "Conta não encontrada." )
-            } else {
-                call.respond(mapOf("OK" to true, "conta" to conta))
-            }
+            val conta
+                    = dao.contaByText(it.contaText, userIdPrincipal.name) ?: throw NotFoundException( "Conta não encontrada." )
+
+//            call.respond(mapOf("OK" to true, "conta" to conta))
+            call.respond(conta)
         }
 
         post<RouteContas> {

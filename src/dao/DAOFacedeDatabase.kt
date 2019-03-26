@@ -2,6 +2,7 @@ package com.example.dao
 
 import com.example.model.Conta
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import java.io.Closeable
@@ -20,7 +21,7 @@ interface DAOFacade : Closeable {
      */
     fun init()
 
-    fun contaByText(text: String): Conta?
+    fun contaByText(text: String, usuario: String): Conta?
 
     fun createConta(text: String, isDefault: Boolean, usuario: String): Int
 
@@ -52,8 +53,8 @@ class DAOFacadeDatabase(val db: Database = Database.connect("jdbc:h2:mem:test", 
         }
     }
 
-    override fun contaByText(text: String) = db.transaction {
-        Contas.select { Contas.text.eq(text) }
+    override fun contaByText(text: String, usuario: String) = db.transaction {
+        Contas.select { (Contas.text.eq(text)) and (Contas.usuario.eq(usuario)) }
             .map { Conta(it[Contas.id], text, it[Contas.isDefault], it[Contas.usuario]) }
             .singleOrNull()
     }
