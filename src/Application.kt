@@ -98,7 +98,7 @@ fun Application.module(testing: Boolean = false) {
     }
 
     /**
-     * Constructs a facade with the database, connected to the DataSource configured earlier with the [dir]
+     * Constructs a facade with the database, connected to the DataSource configured earlier
      * for storing the database.
      */
     val dao: DAOFacade = DAOFacadeCache(
@@ -128,9 +128,6 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
             dateFormat = DateFormat.getDateInstance()
-            disableDefaultTyping()
-            disableDefaultTyping()
-
         }
     }
 

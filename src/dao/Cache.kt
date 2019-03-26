@@ -49,52 +49,26 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
 
         val conta = delegate.contaByText(text, usuario)
 
-        if ( conta != null) contaCache.put(text, conta)
+        if ( conta != null) contaCache.put( montaKeyContaCache(text, usuario), conta )
 
         return conta
     }
 
     override fun createConta(text: String, isDefault: Boolean, usuario: String): Int {
+        val conta = contaByText(text, usuario)
+
+        if ( conta != null ) error("'text=${text}' da Conta já existe.")
+
         val id = delegate.createConta(text, isDefault, usuario)
         val contaLocal = Conta(id, text, isDefault, usuario)
-        contaCache.put(text, contaLocal)
+        contaCache.put( montaKeyContaCache(text, usuario), contaLocal )
 
         return id
     }
 
-//    override fun createRegistroDeConta(oQueFoiComprado: String
-//                                       , quantoFoi: Double
-//                                       , quantasVezes: Long
-//                                       , tag: String
-//                                       , valorDaParcela: Double
-//                                       , contaText: String
-//                                       , dataDaCompra: DateTime
-//                                       , urlNfe: String?
-//                                       , usuario: String): Int {
-//        val id = delegate.createRegistroDeConta(
-//            oQueFoiComprado
-//            , quantoFoi
-//            , quantasVezes
-//            , tag
-//            , valorDaParcela
-//            , contaText
-//            , dataDaCompra
-//            , urlNfe
-//            , usuario)
-//        val registroDeCompraLocal = RegistroDeCompra(
-//            id
-//            , oQueFoiComprado
-//            , quantoFoi
-//            , quantasVezes
-//            , tag
-//            , valorDaParcela
-//            , contaText
-//            , dataDaCompra
-//            , urlNfe
-//            , usuario)
-//        registroDeCompraCache.put(id, registroDeCompraLocal)
-//        return id
-//    }
+    private fun montaKeyContaCache(text: String, usuario: String): String {
+        return text + "|" + usuario
+    }
 
     override fun close() {
         try {

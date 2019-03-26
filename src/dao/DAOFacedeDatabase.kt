@@ -15,6 +15,7 @@ import java.io.File
  * and a cache implementation composing another another DAOFacade.
  */
 interface DAOFacade : Closeable {
+
     /**
      * Initializes all the required data.
      * In this case this should initialize the Users and Kweets tables.

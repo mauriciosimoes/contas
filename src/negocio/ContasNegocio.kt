@@ -36,7 +36,6 @@ fun Route.routeContas(dao: DAOFacade, log: Logger) {
             val conta
                     = dao.contaByText(it.contaText, userIdPrincipal.name) ?: throw NotFoundException( "Conta não encontrada." )
 
-//            call.respond(mapOf("OK" to true, "conta" to conta))
             call.respond(conta)
         }
 
@@ -45,16 +44,16 @@ fun Route.routeContas(dao: DAOFacade, log: Logger) {
                 call.principal<UserIdPrincipal>() ?: error("Informação de autenticação não encontrada no POST.")
 
             val post = try {
-                call.receive<PostConta>()
-            } catch (e: JsonParseException) {
-                throw BadRequestException(e.toString())
-            } catch (e: JsonMappingException) {
-                throw BadRequestException(e.toString())
-            } catch (e: MismatchedInputException) {
-                throw BadRequestException(e.toString())
-            } catch (e: MissingKotlinParameterException) {
-                throw BadRequestException(e.toString())
-            }
+                    call.receive<PostConta>()
+                } catch (e: JsonParseException) {
+                    throw BadRequestException(e.toString())
+                } catch (e: JsonMappingException) {
+                    throw BadRequestException(e.toString())
+                } catch (e: MismatchedInputException) {
+                    throw BadRequestException(e.toString())
+                } catch (e: MissingKotlinParameterException) {
+                    throw BadRequestException(e.toString())
+                }
 
             post.isValid()
 
@@ -65,7 +64,7 @@ fun Route.routeContas(dao: DAOFacade, log: Logger) {
                 contasResponse.add( Conta(idContaLocal, it.text, it.isDefaut, userIdPrincipal.name) )
             }
 
-            call.respond( mapOf("OK" to true, "contas" to contasResponse) )
+            call.respond( mapOf("contas" to contasResponse) )
         }
     }
 }
